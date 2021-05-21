@@ -13,20 +13,15 @@ import Input from './Input';
 import Filter from './Filter';
 
 /* カスタムフック */
-import useStorage from '../hooks/storage';
+// import useStorage from '../hooks/storage';
+import useFirebaseStorage from '../hooks/firebasestorage';
 
 /* ライブラリ */
 import {getKey} from "../lib/util";
 
 function Todo() {
-  // const [items, putItems] = React.useState([
-  //     /* テストコード 開始 */
-  //   { key: getKey(), text: '日本語の宿題', done: false },
-  //   { key: getKey(), text: 'reactを勉強する', done: false },
-  //   { key: getKey(), text: '明日の準備をする', done: false },
-  //   /* テストコード 終了 */
-  // ]);
-  const [items, putItems, clearItems] = useStorage();
+  // const [items, putItems, clearItems] = useStorage();
+  const [items, addItem, updateItem, clearItems] = useFirebaseStorage();
   const [filter, setFilter] = React.useState('ALL');
 
   const displayItems = items.filter(item => {
@@ -35,22 +30,24 @@ function Todo() {
     if (filter === 'DONE') return item.done;
   });
   const handleCheck = checked => {
-    const newItems = items.map(item => {
-      if (item.key === checked.key) {
-        item.done = !item.done;
-      }
-      return item;
-    });
-    putItems(newItems);
+    // const newItems = items.map(item => {
+    //   if (item.key === checked.key) {
+    //     item.done = !item.done;
+    //   }
+    //   return item;
+    // });
+    // putItems(newItems);
+    updateItem(checked);
   };
 
   const handleAdd = text => {
-    putItems([...items, { key: getKey(), text, done: false }]);
+    // putItems([...items, { key: getKey(), text, done: false }]);
+    addItem({ text, done: false });
   };
 
   const handleFilterChange = value => setFilter(value);
   return (
-    <div className="panel">
+    <article className="panel is-primary">
       <div className="panel-heading">
         ITSS ToDoアプリ
       </div>
@@ -74,7 +71,7 @@ function Todo() {
           Delete all tasks
         </button>
       </div>
-    </div>
+    </article>
   );
 }
 
