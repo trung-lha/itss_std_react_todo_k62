@@ -1,6 +1,7 @@
 import React, { useEffect, useState }  from 'react';
 import Login from "./components/Login";
 import { auth, storeUserInfo, updateUser } from "./lib/firebase";
+import UploadAvatar from "./components/UploadAvatar";
 
 /* スタイルシート */
 import './styles/main.css';
@@ -27,12 +28,16 @@ function App() {
     auth.signOut();
   };
 
+  const handleImageChanged = async downlodUrl => {
+    await updateUser(user, downlodUrl);
+  }
 
   const HeaderContent = () => {
     if (user) {
       return (
         <div class="navbar-end">
           <div class="navbar-item">
+          <UploadAvatar userImage={user.image} onSletctedImage={handleImageChanged} />
             {user.name}
           </div>
           <div class="navbar-item">
@@ -44,6 +49,7 @@ function App() {
       return (<Login />)
     }
   }
+
   return (
     <div className="container is-fluid">
       <header class="navbar">
